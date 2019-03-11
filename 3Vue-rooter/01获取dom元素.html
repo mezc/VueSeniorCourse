@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    <div id="app"> </div>
+    <script>
+        var subComponent = {
+            template:`<div></div>`,
+
+        }
+
+        Vue.component("subCom", subComponent)
+        var App = {  
+            //获取button属性
+            //给button绑定一个ref属性
+            //通过this.$refs.属性名字获取
+            //如果是给组件绑定ref属性，那么this.$refs.xxx获取的是组件对象
+            template:`
+                <div>
+                    <button ref="button1">我是按钮1</button>
+                    <button ref="button2">我是按钮2</button>
+                    <subCom ref="subC"></subCom>
+                </div>
+            `,
+            created(){
+
+            },
+            mounted(){
+                console.log(this.$refs.button1)
+                console.log(this.$refs.button2)
+                console.log(this.$refs.subC)
+            },
+            beforeUpdate() {
+                
+            },
+            updated() {
+                
+            },
+        }
+
+        new Vue({
+            el:"#app",
+            components:{
+                App
+            },
+            template:`<App />`,
+        })
+    </script>
+    
+</body>
+</html>
