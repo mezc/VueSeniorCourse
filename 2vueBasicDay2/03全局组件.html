@@ -60,8 +60,8 @@
         }
         .success{
             color: #fff;
-            background-color: #67c23a;
-            border-color: #67c23a;
+        background-color: #67c23a;
+        border-color: #67c23a;
         }
 
     </style>
@@ -82,8 +82,7 @@
            //slot:vue的分发组件
            template:`
                 <button class="default" :class="type">
-                    <slot name="one"/>
-                    <slot name="two />
+                    <slot />
                 </button>
            `,
            props:["type"]
