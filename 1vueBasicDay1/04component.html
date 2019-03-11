@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <style>
+        /* 清空默认样式 */
+        *{
+            padding:0;
+            margin:0;
+        }
+        .main{
+            width:100%;
+        }
+        .header{
+            width:100%;
+            height:80px;
+            background-color: pink;
+        }
+        .main2{
+            width:100%;
+            height: 1000px;
+        }
+        .main2 .side{
+            float:left;
+            width:30%;
+            height: 100%;
+            background-color:lightblue;
+        }
+        .main2 .content{
+            float:left;
+            width:70%;
+            height: 100%;
+            background-color:lightgreen;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    
+    <script>
+        //声明全局组件,挂载在全局的Vue中，按钮，全局可使用
+        // 第一个参数是组件的名字，第二个参数是options
+        // 使用时，直接在组件的component中使用
+        Vue.component("Vbtn",{
+            template:'<button>按钮</button>'
+        })
+
+        //声明组件
+        var Vcontent = {
+            template:"<div class='content'><h1 >我是内容组件<Vbtn /></h1></div>",
+            data(){
+                return{}
+            }
+        }
+
+        var Vside = {
+            template:"<div class='side'><h1 >我是侧部组件<Vbtn /></h1></div>",
+            data(){
+                return{}
+            }
+        }
+
+        var Vheader = {
+            template:"<div class='header'><h1>我是头部组件</h1></div>",
+            data(){
+                return{}
+            }
+        } 
+
+        // 1.声明局部组件,组件名首字母大写
+        var App = {
+            template:"<div class='main'><Vheader /><div class='main2'><Vside /><Vcontent /></div></div>",
+            data(){
+                return{
+
+                }
+            },
+            components:{
+                Vheader,
+                Vside,
+                Vcontent
+            }
+        }
+
+        new Vue({
+            el:"#app",
+            //3使用组件
+            template:"<App></APP>",
+            data(){
+                return{
+
+                }
+            },
+            // 2挂载组件,用复数
+            components:{
+                App:App
+            }
+
+
+        })
+    </script>
+</body>
+</html>

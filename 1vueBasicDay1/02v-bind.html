@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <style>
+        .po{
+            color:red;
+        }
+        .active{
+            color:green;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 如果为true，则active的值在po里，如果为false，active的值不会到po中 -->
+        <p class="po" v-bind:class="{active:isRed}">我是字体</p>
+        <!-- <button v-on:click = "isRed=!isRed">切换字体颜色</button> -->
+        <button v-on:click="changeColor">切换字体颜色</button>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el:"#app",
+            // template:'',
+            data:{
+                // msg:"active"
+                isRed:false
+            },
+            methods:{
+                changeColor(e){
+                    this.isRed = !this.isRed
+                    console.log('我是new实例：', this)
+                    //获取el属性
+                    console.log("我是el:", this.$el)
+                    console.log("获取元素$root:", this.$root)
+                    //拿到button对象
+                    console.log(e.target)
+                }
+            }
+        })
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <style>
+        /* 清空默认样式 */
+        *{
+            padding:0;
+            margin:0;
+        }
+        .main{
+            width:100%;
+        }
+        .header{
+            width:100%;
+            height:80px;
+            background-color: pink;
+        }
+        .main2{
+            width:100%;
+            height: 1000px;
+        }
+        .main2 .side{
+            float:left;
+            width:30%;
+            height: 100%;
+            background-color:lightblue;
+        }
+        .main2 .content{
+            float:left; 
+            width:70%;
+            height: 100%;
+            background-color:lightgreen;
+        }
+        .default{
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            color: #606266;
+            -webkit-appearance: none;
+            text-align: center;
+            box-sizing: border-box;
+            outline: none;
+            margin: 0;
+            transition: .1s;
+            font-weight: 500;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        .success{
+            color: #fff;
+            background-color: #67c23a;
+            border-color: #67c23a;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    
+    <script>
+       //全局组件
+       Vue.component("Vbtn",{
+           data(){
+               return {
+
+               }
+           },
+           //slot:vue的分发组件
+           template:`
+                <button class="default" :class="type">
+                    <slot name="one"/>
+                    <slot name="two />
+                </button>
+           `,
+           props:["type"]
+       })
+        var Vcontent = {
+            template:`<div class='content'><h1 >我是内容组件</h1>
+            <ul><li v-for='(item,index) in bindContent '><h3>{{item.id}}</h3><h4 v-text='item.name'></h4><h5 v-text='item.price'></h5></li></ul><Vbtn>删除<Vbtn></div>`,
+            data(){
+                return{}
+            },
+            props:[
+                "bindContent"
+            ]
+        }
+
+        var Vside = {
+            template:`<div class='side'><h1 >我是侧部组件</h1>
+                <Vbtn type="success">播放</Vbtn>
+            </div>`,
+            data(){
+                return{}
+            }
+        }
+
+        var Vheader = {
+            template:`<div class='header'>
+                        <h1>我是头部组件</h1>
+                        <button @click= 'changeFontSize'>字体变大</button>
+                        <button @click = "shrink">字体变小</button>
+                    </div>`,
+            methods:{
+                changeFontSize(){
+                        //传递给父组件使用<Vheader>的地方，触发父组件中自定义事件
+                        // this.$emit（），第一个参数是触发父组件自定义事件的名字
+                        this.$emit("change")
+                    },
+                shrink(){
+                    this.$emit("shrink")
+                }
+            },
+            data(){
+                return{
+                }
+            }
+        } 
+
+        // 1.声明局部组件,组件名首字母大写
+        var App = {
+            //使用组件
+            template:`<div class='main' :style='{fontSize:menuFontSize+"em"}'>
+                <Vheader @change="changeHandler" @shrink="shrinkHandler"/>
+                <div class='main2'>
+                <Vside />
+                <Vcontent v-bind:bindContent = 'menus' />
+                </div>
+            </div>`,
+            methods: {
+                changeHandler(){
+                    this.menuFontSize += .1;
+                },
+                shrinkHandler(){
+                    this.menuFontSize -= .1;
+                }
+            },
+            data(){
+                return{
+                    menus:[
+                        {id:1,name:"benz",price:30},
+                        {id:2,name:"minicooper",price:40},
+                        {id:3, name:"jeep", price:50}
+                    ],
+                    menuFontSize:1,
+                }
+                
+            },
+            // 注册组件
+            components:{
+                Vheader,
+                Vside,
+                Vcontent
+            }
+        }
+
+        new Vue({
+            el:"#app",
+            //3使用组件
+            template:"<App></APP>",
+            data(){
+                return{
+
+                }
+            },
+            // 2挂载组件,用复数
+            components:{
+                App:App
+            }
+
+
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        //全局组件
+        //全局组件传参
+        Vue.filter("allFilter",function(value, args){
+            return args + " " + value.split("").reverse().join("")
+        })
+
+        //局部组件
+        // 组件内部使用filters:{
+        //     //过滤器的名字：function(value){
+        //         内部一定要用return
+        //     }
+        //     //调用过滤器：{{数据属性|过滤器名字}}
+        // }
+        var App  = {
+            data(){
+                return {
+                    price:0,
+                    msg:"hello world"
+                }
+            },
+            template:`
+                <div>
+                    <input type="number" name="price" v-model="price"/>
+                    <h3>{{price | myFilter}}</h3>
+                    <h4>{{msg | allFilter("here")}}</h4>
+                    
+                </div>
+            `,
+            filters:{
+                myFilter:function(value){
+                    return "¥" + value
+                }
+            }
+        }
+
+
+        new Vue({
+            el:"#app",
+            template:`<App />`,
+            components:{
+                App
+            },
+            methods:{
+
+            }
+        })
+    </script>
+</body>
+</html>

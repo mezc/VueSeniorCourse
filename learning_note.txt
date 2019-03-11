@@ -1,0 +1,21 @@
+1.v-bind 是单向数据绑定，简写 ”:“,v-model是双向数据绑定
+
+v-if ,v-show
+
+v-if=""
+如果为true，相当于appendChild
+false：相当于removeChild
+
+v-show:
+true:oDiv.style.display = "block
+false:oDiv.style.display = "none"
+
+v-on:原生js的事件名=”逻辑“
+v-on:原生js事件名=“方法名”，该方法必须在methods
+简写：@
+
+v-bind:xxx=''
+v-bind：标签中原生属性
+v-bind:自定义属性
+
+v-model 只能应用在表单控件 ui控件中

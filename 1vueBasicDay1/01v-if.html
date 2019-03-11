@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <style>
+        .active{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        {{msg}}
+        <br>
+        {{msg2}}
+
+        <ul>
+            <li v-for="item in menuLists">
+                <h3>{{item.id}}</h3>
+                <h3>{{item.name}}</h3>
+            </li>
+        </ul>
+
+        <ul>
+            <li v-for="(value,key) in dict">{{key}}--{{value}}</li>
+        </ul>
+        <div v-bind:class="color">v-bind属性绑定</div>
+    </div>
+
+    <script>
+        //指令：
+        // v-text,v-html,v-if, v-else-if, v-show
+        // v-if:是条件渲染，被销毁和被重建，如果初始条件为假则什么都不做，直到条件改变
+        //v-show不管初始条件，元素已经被渲染，只是基于css-display样式进行切换
+        // v-if有更高的切换开销，v-show有更高的渲染开销
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                msg:"普通文本",
+                msg2:"<h3>h3标签</h3>",
+                isShow:false,
+                menuLists:[
+                    {id:1,name:"a"},
+                    {id:2,name:"b"},
+                    {id:3,name:"c"}
+                ],
+                dict:{
+                    name:"hanmeimei",
+                    age:20,
+                    fav:'apple'
+                },
+                color:"active"
+            },
+            methods:{},
+            // template:'<div><div v-html="msg2"></div><div v-if="isShow">hahahha</div><div v-if="Math.random() > 0.5">此时大于0.5</div><div v-else>此时小于0.5</div></div>'
+        })
+        
+    </script>
+</body>
+</html>
+
+

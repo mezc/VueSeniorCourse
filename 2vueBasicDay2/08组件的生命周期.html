@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    
+    <div id="app">
+
+    </div>
+
+    <script>
+        /*生命周期钩子函数
+        beforeCreate
+        created
+        beforeMount
+        mounted
+        beforeUpdate
+        activated
+        beforeDestroy
+        destroyed
+        */
+        var Test = {
+            template:`
+                <div>
+                    {{msg}}
+                    <button @click="changeHandler">改变</button>
+                </div>
+            `,
+            methods:{
+                changeHandler(){
+                    this.msg = this.msg + "点击改变按钮了"
+                }
+            },
+            data:function(){
+                return {
+                    msg:"hello world"
+                }
+            },
+            
+            beforeCreate(){
+                //组件创建之前
+                console.log("beforeCreate",this.msg)
+            },
+            created:function(){
+                //组件创建之后
+                //可以操作后台数据
+                //应用：发起ajax请求,获取后端数据，将数据保存到前端
+                console.log("created",this.msg)
+            },
+            beforeMount:function(){
+                //挂载数据到dom前会调用
+                console.log("beforeMount",document.getElementById("app"))
+            },
+            mounted:function(){
+                //挂载数据到dom后会调用
+                console.log("mounted",document.getElementById("app"))
+            },
+            beforeUpdate(){
+                //更新dom前调用这个钩子函数
+                // 应用：获取原始dom
+                console.log("beforeUpdate",document.getElementById("app").innerHTML)
+            },
+            updated() {
+                //更新dom后调用这个钩子函数
+                // 应用：获取最新的dom
+                console.log("updated",document.getElementById("app").innerHTML)
+            },
+            beforeDestroy(){
+                console.log("beforeDestroy")
+            },
+            destroyed(){
+                console.log("destroyed")
+            },
+            //联合<keep-alive></keep-alive>使用
+            activated(){
+                console.log("被激活了")
+            },
+            deactivated() {
+                console.log("被停用了")
+            },
+
+        }
+
+        var App = {
+            data:function(){
+                return{
+                    isShow:true
+                }
+                
+            },
+            //Vue内置组件，能在组件切换过程中将状态保留在内存中，防止重复渲染。
+            //<keep-alive>应用，路由切换，做缓存
+            template:`
+                <div>
+            
+                    <keep-alive>
+                    <Test v-if="isShow"/>
+                    </keep-alive>
+                    <button @click="isShow=!isShow">显示</button>
+                </div>
+            `,
+            components:{
+                Test
+            },
+            
+        }
+
+        new Vue({
+            el:'#app',
+            methods:{},
+            data:function(){
+                return {
+
+                }
+            },
+            template:`
+                <App />
+            `,
+            components:{
+                App
+            }
+        })
+    </script>
+    
+</body>
+</html>

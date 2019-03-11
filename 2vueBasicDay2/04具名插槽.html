@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        Vue.component("mySlot",{
+            template:`
+                <li>
+                    <slot name="one" />
+                    <slot name="two" />
+                </li>
+            `
+        })
+        var App = {
+            template:`
+                <div>
+                    <ul>
+                        <li>
+                        
+                            // <h2 slot="one">第一个slot</h2>
+                            // <h3 slot="two">第二个slot</h3>
+                        </li>
+                    </ul>
+                </div>
+            `
+        }        
+
+        new Vue({
+            el:"#app",
+            components: {
+                App
+            },
+            template:`
+                <App>
+            `
+        })
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <style>
+        /* 清空默认样式 */
+        *{
+            padding:0;
+            margin:0;
+        }
+        .main{
+            width:100%;
+        }
+        .header{
+            width:100%;
+            height:80px;
+            background-color: pink;
+        }
+        .main2{
+            width:100%;
+            height: 1000px;
+        }
+        .main2 .side{
+            float:left;
+            width:30%;
+            height: 100%;
+            background-color:lightblue;
+        }
+        .main2 .content{
+            float:left; 
+            width:70%;
+            height: 100%;
+            background-color:lightgreen;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    
+    <script>
+        //父组件向子组件传递数据
+        //1.在父组件中 ,绑定自定义的属性=父组件中data(){}的key，v-bind,简写：
+        //2.子组件中声明props:[“自定义的属性名”]，来接收值
+        //3.任意使用
+        //声明组件
+        var Vcontent = {
+            template:`<div class='content'><h1 >我是内容组件</h1><ul><li v-for='(item,index) in bindContent '><h3>{{item.id}}</h3><h4 v-text='item.name'></h4><h5 v-text='item.price'></h5></li></ul></div>`,
+            data(){
+                return{}
+            },
+            props:[
+                "bindContent"
+            ]
+        }
+
+        var Vside = {
+            template:`<div class='side'><h1 >我是侧部组件</h1></div>`,
+            data(){
+                return{}
+            }
+        }
+
+        var Vheader = {
+            template:`<div class='header'>
+                        <h1>我是头部组件</h1>
+                        <button @click= 'changeFontSize'>字体变大</button>
+                        <button @click = "shrink">字体变小</button>
+                    </div>`,
+            methods:{
+                changeFontSize(){
+                        //传递给父组件使用<Vheader>的地方，触发父组件中自定义事件
+                        // this.$emit（），第一个参数是触发父组件自定义事件的名字
+                        this.$emit("change")
+                    },
+                shrink(){
+                    this.$emit("shrink")
+                }
+            },
+            data(){
+                return{
+                }
+            }
+        } 
+
+        // 1.声明局部组件,组件名首字母大写
+        var App = {
+            //使用组件
+            template:`<div class='main' :style='{fontSize:menuFontSize+"em"}'>
+                <Vheader @change="changeHandler" @shrink="shrinkHandler"/>
+                <div class='main2'>
+                <Vside />
+                <Vcontent v-bind:bindContent = 'menus' />
+                </div>
+            </div>`,
+            methods: {
+                changeHandler(){
+                    this.menuFontSize += .1;
+                },
+                shrinkHandler(){
+                    this.menuFontSize -= .1;
+                }
+            },
+            data(){
+                return{
+                    menus:[
+                        {id:1,name:"benz",price:30},
+                        {id:2,name:"minicooper",price:40},
+                        {id:3, name:"jeep", price:50}
+                    ],
+                    menuFontSize:1,
+                }
+                
+            },
+            // 注册组件
+            components:{
+                Vheader,
+                Vside,
+                Vcontent
+            }
+        }
+
+        new Vue({
+            el:"#app",
+            //3使用组件
+            template:"<App></APP>",
+            data(){
+                return{
+
+                }
+            },
+            // 2挂载组件,用复数
+            components:{
+                App:App
+            }
+
+
+        })
+    </script>
+</body>
+</html>
