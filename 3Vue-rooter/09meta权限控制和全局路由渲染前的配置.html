@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/vue-router/dist/vue-router.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+
+    <script>
+        var Home = {
+            template:`
+            <div>
+                我是首页
+                </div>
+            `
+        }
+
+        var Blog = {
+            template:`
+            <div>
+                我是博客
+                </div>
+            `
+        }
+
+        var Login = {
+            template:`
+            <div>
+                <input type="text" v-model="name"/>
+                <input type="text" v-model="pwd"/>
+                <button @click="clickLogin">登录</button>
+                </div>
+            `,
+            data(){
+                return {
+                    name:"",
+                    pwd:""
+                }
+            },
+            methods: {
+                clickLogin(){
+                    //localStorage.setItem(key,value)
+                    localStorage.setItem("user",{name:this.name,pwd:this.pwd})
+                    //收集好数据后，动态跳转到blog页面
+                    //编程式导航
+                    this.$router.push({name:"blog"})
+                    //或者this.$router.push({path:"/blog/:id"})
+                    // this.$router.push({name:"blog",params:{id:'1'}})
+                }
+            },
+        }
+        var Router = new VueRouter({
+            routes:[
+                //重定向
+                {
+                    path:"/",
+                    redirect:"/home"
+                },
+                {
+                    path:'/home',
+                    component:Home,
+                    name:"home"
+                },
+                {
+                    path:"/blog",
+                    name:"blog",
+                    component:Blog,
+                    //给路由做权限控制，全局路由守卫，来做参照条件
+                    meta:{
+                        //表明用户访问该组件需要登录
+                        auth:true
+                    }
+                },
+                {
+                    path:"/login",
+                    name:"login",
+                    component:Login
+                }
+            ]
+
+        })
+        //
+        Router.beforeEach((to, from, next) => {
+            // to and from are both route objects. must call `next`.
+
+            console.log("beforeEachTo",to)
+            console.log("beforeEachFrom",from)
+            if(to.meta.auth){
+                if(localStorage.getItem("user")){
+                    // alert("1")
+                    next()
+                }else{
+                    // alert("2")
+                    //下一次要跳转的路由
+                    next({
+                        path:"/login"
+                    })
+                }
+            }else{
+                //必须调用next(),如果不调用，路由会卡
+                //放行
+                next()
+            }
+            
+
+        })
+
+        var App = {
+            //<router-link>声明式导航
+            template:`
+            <div>
+                <router-link :to = "{name:'home'}">首页</router-link>
+                <router-link :to = "{name:'blog'}">博客</router-link>
+                <router-link :to="{name:'login'}">登录</router-link>
+                <a href="javascript:void(0);" @click="clickClear">退出</a>
+                <router-view />
+                </div>
+            `,
+            methods:{
+                clickClear(){
+                    localStorage.removeItem("user")
+                    this.$router.push("/home")
+                }
+            }
+        }
+
+        new Vue({
+            el:"#app",
+            components:{
+                App
+            },
+            template:`<App />`,
+            router:Router
+        })
+    </script>
+    
+</body>
+</html>

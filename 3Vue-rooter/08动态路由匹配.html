@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/vue-router/dist/vue-router.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        var Home = {
+            template:`
+            <div>
+                <router-link :to="{name:'commonUse',params:{id:'android'}}">ANDROID</router-link>
+                <router-link :to="{name:'commonUse',params:{id:'ios'}}">IOS</router-link>
+                <router-view />
+                </div>
+            `
+        }
+
+        var News = {
+            template:`
+            <div></div>
+            `
+        }
+        //公共组件
+        var commonUse = {
+            template:`
+            <div>
+                {{msg}}
+                </div>
+            `,
+            data(){
+                return{
+                    msg:""
+                }
+                
+            },
+            created(){
+                this.msg = "i m page of android"
+                console.log("$route",this.$route)
+            },
+            watch:{
+                //对路由变化作出响应，在公共组件中监听
+                "$route"(to,from){
+                    console.log("to",to)
+                    console.log("from",from)
+                    this.msg = "i m page of " + to.params.id
+                }
+            }
+        }
+        
+        //声明路由
+        var Router = new VueRouter({
+            routes:[
+                {
+                    path:'/home',
+                    name:"home",
+                    component:Home,
+                    children:[
+                        {   
+                            //相当于path:":id"
+                            path:"/home/:id",
+                            name:"commonUse",
+                            component:commonUse
+                        }
+                    ]
+                    
+                },
+                {
+                    path:"/news",
+                    name:"news",
+                    component:News
+                }
+            ]
+        })
+
+        var App = {
+            template:`
+            <div>
+                <router-link to="/home">首页</router-link>
+                <router-link to="/news">新闻</router-link>
+                <router-view />
+            </div>
+            `
+        }
+
+        new Vue({
+            el:"#app",
+            template:`<App />`,
+            components:{
+                App
+            },
+            router:Router
+        })
+    </script>
+    
+</body>
+</html>

@@ -50,7 +50,7 @@
         //1.在父组件中 ,绑定自定义的属性=父组件中data(){}的key，v-bind,简写：
         //2.子组件中声明props:[“自定义的属性名”]，来接收值
         //3.任意使用
-        //声明组件
+        //声明子组件, 父组件传递数据给子组件用props:[]
         var Vcontent = {
             template:"<div class='content'><h1 >我是内容组件</h1><ul><li v-for='(item,index) in bindContent '><h3>{{item.id}}</h3><h4 v-text='item.name'></h4><h5 v-text='item.price'></h5></li></ul></div>",
             data(){

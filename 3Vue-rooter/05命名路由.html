@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/vue-router/dist/vue-router.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+
+    <script>
+        //routerRouter有两个全局组件，
+        //router-link,默认渲染a标签,to默认渲染href属性
+        //router-view,所有路由组件的出口，写在哪里就渲染哪里dom
+        //声明登录子组件
+        var Login = {
+            template:"<div>i m login</div>"
+        }
+
+        //声明注册子组件
+        var Register = {
+            template:"<div>i m register</div>"
+        }
+
+        //1让vue使用该VueRouter
+        //如果vue是局部作用域的对象，必须使用Vue.use(VueRouter)
+        Vue.use(VueRouter);
+
+        //2创建路由对象
+        var Router = new VueRouter({
+            //3配置路由对象
+            routes:[
+                //4路由匹配规则
+                {
+                    //4.1配置路径
+                    path:"/login",
+                    //4.2渲染组件
+                    component:Login,
+                    //4.3可以选择给路由命名
+                    //在使用时to要绑定属性，格式为:to="{name:login}"
+                    name:"login"
+                },
+                {
+                    path:"/register",
+                    component:Register,
+                    name:"register"
+                }
+
+            ]
+        })
+        
+        //
+        var App = {
+            template:`<div>
+                    <router-link :to = "{name:'login'}">登录</router-link>
+                    <router-link :to = "{name:'register'}">注册</router-link>
+                    <router-view></router-view>
+                </div>`
+        }
+        //
+        new Vue({
+            el:"#app",
+            template:'<App />',
+            components:{
+                App
+            },
+            //5将配置好的路由对象挂载在vue实例化对象中
+            router:Router
+        })
+    </script>
+</body>
+</html>

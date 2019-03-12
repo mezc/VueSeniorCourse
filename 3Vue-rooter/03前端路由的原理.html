@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+<body>
+
+    <a href="#/login">login</a>
+    <a href="#/register">register</a>
+    <div id="app">
+
+    </div>
+    <script>
+        var oDiv = document.getElementById("app")
+        window.onhashchange = function(){
+            console.log(location.hash)
+
+            switch(location.hash){
+                case "#/login":
+                    oDiv.innerHTML = "<h2>i m login</h2>"
+                    break;
+                case "#/register":
+                    oDiv.innerHTML = "<h2>i m register</h2>"
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    </script>
+    
+</body>
+</html>
