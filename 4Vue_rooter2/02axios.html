@@ -11,12 +11,25 @@
 <body>
     <div id="app"></div>
     <script>
+        Vue.prototype.$axios = axios
+
         var App = {
             template:`
             <div>
                 <button @click='sendAjax'>发请求</button>
                 </div>
             `,
+            methods:{
+                sendAjax(){
+                    this.$axios.get("http://127.0.0.1:8888/")
+                    .then(res=>{
+                        console.log(res)
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+                }
+            }
         }
         new Vue({
             el:"#app",

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./node_modules/axios/dist/axios.js"></script>
+    <script src="../lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        //合并请求，两个请求一起发送
+
+        Vue.prototype.$axios = axios
+
+        var App = {
+            data(){
+                return{
+                    res1:"",
+                    res2:""
+                }
+            },
+            template:`
+            <div>
+                response1:{{res1}}
+                response2:{{res2}}
+                <button @click='sendAjax'>合并请求</button>
+                </div>
+            `,
+            methods:{
+                sendAjax(){
+                    //请求1，get:/
+                    //请求2，post:/add
+                    //设置全局共用url
+                    this.$axios.defaults.baseURL = "http://127.0.0.1:8888/"
+                    var q1 = this.$axios.get("")
+                    var q2 = this.$axios.post("add","a=1")
+                    
+                    this.$axios.all([q1,q2])
+                    .then(this.$axios.spread((res1,res2)=>{
+                        //全部请求成功
+                        this.res1 = res1.data;
+                        this.res2 = res2.data;
+                    }))
+                    .catch(err=>{
+                        console.log(err)
+                    })
+                }
+            }
+        }
+        new Vue({
+            el:"#app",
+            template:`
+           <App />
+            `,
+            components:{
+                App
+            }
+        })
+    </script>
+    
+</body>
+</html>
