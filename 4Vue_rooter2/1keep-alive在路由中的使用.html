@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/vue-router/dist/vue-router.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        var Topics = {
+            template:`
+            <div >
+                <h3 @click = "clickHandler">this is topics</h3>
+                </div>
+            `,
+            methods:{
+                clickHandler(e){
+                    e.target.style.color = "red"
+                }
+            },
+            created(){
+                console.log("topics 创建了created")
+            },
+            mounted(){
+                console.log("topics创建了mounted")
+            },
+            destroyed(){
+                console.log("topics创建了destroyed")
+            }
+        }
+
+        var Series = {
+            template:`
+            <div>
+                this is series
+                </div>
+            `,
+            created(){
+                console.log("series 创建了created")
+            },
+            mounted(){
+                console.log("series创建了mounted")
+            },
+            destroyed(){
+                console.log("series创建了destroyed")
+            }
+        }
+
+        var Router = new VueRouter({
+            routes:[
+                {
+                    path:"/series",
+                    name:"series",
+                    component:Series
+                },
+                {
+                    path:"/topics",
+                    name:"topics",
+                    component:Topics
+                }
+            ]
+        })
+
+        var App = {
+            template:`
+            <div>
+                <router-link to="/series">付费栏目</router-link>
+                <router-link to="/topics">专题工厂</router-link>
+                <keep-alive>
+                        <router-view />
+                    </keep-alive>
+                </div>
+            `
+        }
+        new Vue({
+            el:"#app",
+            template:`
+            <App />
+            `,
+            components:{
+                App
+            },
+            router:Router                
+        })
+    </script>
+</body>
+</html>
