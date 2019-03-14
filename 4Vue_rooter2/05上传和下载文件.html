@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        Vue.prototype.$axios = axios
+
+        var App = {
+            data(){
+                return {
+                    file:{},
+                    rate:0
+                }
+            },
+            template:`
+            <div>
+                上传进度：{{rate}}%
+                选择文件：
+                <input type="file" name="file" @change="changeHandler" />
+                <button @click="sendAjax">发送请求</button>
+            </div>
+            `,
+            methods: {
+                changeHandler(e){
+                    console.log(e.target.files[0])
+                    this.file = e.target.files[0]
+                },
+                sendAjax(){
+                    this.$axios.defaults.baseURL = 'http://127.0.0.1:8888';
+                    //表单方法
+                    var fd = new FormData()
+                    fd.append("file", this.file);
+                    this.$axios.post("upload",fd,{
+                    // `onUploadProgress` 允许为上传处理进度事件
+                        onUploadProgress:(progressEvent)=>{
+                            // 对原生进度事件的处理
+                            console.log("progressEvent",progressEvent);
+                            var process = (progressEvent.loaded/progressEvent.total)*100;
+                            //操作dom更新
+                            // this.$nextTick(callback)
+                            this.$nextTick(function(){
+                                this.rate = Math.ceil(process)
+                            })
+                        }
+                    })
+                    .then(res=>{
+                        console.log(res)
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+                }
+            },
+        }
+
+
+        new Vue({
+            el:"#app",
+            components:{
+                App
+            },
+            template:`
+                <App />
+            `,
+        })
+    </script>
+    
+</body>
+</html>

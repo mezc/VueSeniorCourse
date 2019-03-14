@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        //取消请求：
+        //可以使用CancelToken.source工厂方法创建cancel token
+        // var CancelToken = axios.CancelToken;
+        // var source = CancelToken.source();
+        //axios.get("",{
+        //     cancelToken:source.token
+        // })
+        // .catch(function(e){}) 
+
+        Vue.prototype.$axios = axios
+
+        var App = {
+            data(){
+                return {
+                    file:{},
+                    rate:0,
+                    source:null,
+                    currentLoaded:0
+                }
+            },
+            template:`
+            <div>
+                上传进度：{{rate}}%
+                选择文件：
+                    <input type="file" name='file' @change = "changeHandler" />
+                    <button @click="sendAjax">发送请求</button>
+                    <button @click = "cancel">取消请求</button>
+                    <button @click="resume">续传</button>
+            </div>
+            `,
+            methods:{
+                resume(){
+
+                },
+                cancel(){
+                    this.source.cancel("请求被取消")
+                },
+                changeHandler(e){
+                    console.log(e.target.files[0])
+                    this.file = e.target.files[0]
+                },
+                sendAjax(){
+                    //设置公用url
+                    this.$axios.defaults.baseURL="http://127.0.0.1:8888/";
+
+                    //取消请求
+                    var CancelToken = this.$axios.CancelToken;
+                    var source = CancelToken.source()
+                    this.source = source
+
+                    //表单属性
+                    var fd = new FormData();
+                    fd.append("file",this.file);
+
+                    this.$axios.post("upload",fd,{
+                        //携带取消请求标志
+                        cancelToken:source.token,
+                        onUploadProgress:(progressEvent)=>{
+
+                            this.currentLoaded = progressEvent.loaded
+
+                            console.log("progressEvent",progressEvent)
+                            var progress = (progressEvent.loaded/progressEvent.total)*100;
+                            //更新dom
+                            this.$nextTick(function(){
+                                this.rate = Math.ceil(progress)
+                            })
+                        }
+                    })
+                    .then(res=>{
+                        console.log("then",res)
+                    })
+                    .catch(err=>{
+                        console.log("catch",err)
+                    })
+                }
+
+            }
+
+        }
+        new Vue({
+            el:"#app",
+            components:{
+                App
+            },
+            template:`
+            <App />
+            `,
+        })
+    </script>
+    
+</body>
+</html>

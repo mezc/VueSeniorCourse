@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src = "../lib/vue-2.4.0.js"></script>
+    <script src="./node_modules/axios/dist/axios.js"></script>
+    <style>
+        .loading{
+            width: 150px;
+            height: 15px;
+            margin: 0 auto;
+            margin-top:100px;
+        }
+        .loading span{
+            display: inline-block;
+            width: 15px;
+            height: 100%;
+            margin-right: 5px;
+            border-radius: 50%;
+            background: lightgreen;
+            -webkit-animation: load 1.04s ease infinite;
+        }
+        .loading span:last-child{
+            margin-right: 0px; 
+        }
+        @-webkit-keyframes load{
+            0%{
+                opacity: 1;
+            }
+            100%{
+                opacity: 0;
+            }
+        }
+        .loading span:nth-child(1){
+            -webkit-animation-delay:0.13s;
+        }
+        .loading span:nth-child(2){
+            -webkit-animation-delay:0.26s;
+        }
+        .loading span:nth-child(3){
+            -webkit-animation-delay:0.39s;
+        }
+        .loading span:nth-child(4){
+            -webkit-animation-delay:0.52s;
+        }
+        .loading span:nth-child(5){
+            -webkit-animation-delay:0.65s;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        //拦截器：
+        //在请求被then,catch处理前拦截
+        //添加请求拦截器
+        //axios.interceptors.request.use(function(config){
+            // return config
+        // }),function(error){return Promise.reject(error)}
+        //添加响应拦截器
+        // axios.interceptors.response.use(function(response){
+            // return response;
+        // }),function(error){
+            // return Promise.reject(error)
+        // }
+
+        Vue.prototype.$axios = axios
+
+        var App = {
+            data(){
+                return {
+                    isShow:false
+                }
+            },
+            template:`
+                <div>
+                    <div class="loading" v-show="isShow">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <button @click='sendAjax'>发请求</button>
+                </div>
+            `,
+            methods:{
+                sendAjax(){
+                    //添加请求拦截器
+                    this.$axios.interceptors.request.use(function(config){
+                        //在发送请求之前做些什么
+                        this.isShow = true
+                        return config
+                    },function(error){
+                        //请求错误做些什么
+                        return Promise.reject(error)
+                    });
+                    //添加响应拦截器
+                    this.$axios.interceptors.response.use(function(response){
+                        //响应结束之前
+                         this.isShow = false
+                        return response;
+                    },function(error){
+                        //对响应错误的数据做些什么s
+                        return Promise.reject(error)
+                    });
+                    this.$axios.get("http://127.0.0.1:8888/")
+                    .then(res=>{
+                        console.log(res)
+                    })
+                    .catch(res=>{
+                        console.log(res)
+                    })
+                }
+
+            }
+        }
+
+        new Vue({
+            el:"#app",
+            components:{
+                App
+            },
+            template:`
+            <App />
+            `
+        })
+    </script>
+    
+</body>
+</html>
