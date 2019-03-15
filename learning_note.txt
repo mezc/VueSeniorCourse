@@ -19,3 +19,25 @@ v-bind：标签中原生属性
 v-bind:自定义属性
 
 v-model 只能应用在表单控件 ui控件中
+
+2.webpack安装在开发环境下:cnpm i webpack@3 --save-dev
+
+3.webpack:
+//1.执行webpack时识别webpack.config.js
+//2.使用其他文件名，更改脚本
+scripts:{
+    "dev":"webpack --config ./webpack.dev.config.js"
+}
+//3.css-loader:
+cnpm i css-loader style-loader -D
+//4.处理图片的loader
+cnpm i url-loader file-loader -D
+//处理图片时，设置合理的limit很有必要
+limit小于图片大小时，显示的是url 
+//5.less-loader:
+cnpm i less-loader less -D
+//6.配置dist
+在config.js中，具体见 05less-loader/webpack.dev.config.jss
+//7.html-webpack-plugin:
+cnpm i html-webpack-plugin -D
+参照物里的index.html自动打包到dist里，并且在html中不用导入build.js
