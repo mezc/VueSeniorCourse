@@ -55,7 +55,7 @@ webpack-dev-server:
 }
 //npm run dev 
 //9es6解析
-cnpm i babel-core babel-loader panel-preset-env babel-plugin-transform-runtime -D
+cnpm i babel-core babel-loader@7 panel-preset-env babel-plugin-transform-runtime -D
 //在webpack-dev-config.js文件中配置：
 loader:{
     //处理es6，7，8
@@ -76,5 +76,19 @@ cnpm i vue-loader@14 vue-template-compiler@2 -D
 //main.js:
 new Vue({
     el:"#app",
-    render:c=>(App)
+    render:c=>c(App)
 })
+
+
+4.$emit $on 必须绑定一个公共的是实例，才能够触发。
+新建
+//公有vue实例
+var Event = new Vue();
+
+5.vue-cli,需要安装全局
+cnpm i vue-cli -G
+//拉取vue-cli 2,全局安装桥接工具
+cnpm i -g @vue/cli-init
+//vue-cli@2:
+//vue init 模版名 项目名
+//vue init webpack my-project

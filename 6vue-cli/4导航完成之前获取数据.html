@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue-router.js"></script>
+    <script src="vue.js"></script>
+    <script src="axios.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+
+    <script>
+        Vue.prototype.$axios = axios
+
+        var User = {
+            data(){
+                return {
+                    user:"",
+                    error:null,
+                    timer:null,
+                    num:0,
+                    msg:"",//输入框输入的内容
+                    msg1:"",//页面展示的内容
+                    confirm_:true//不加引号
+                }
+            },
+            template:`
+            <div>
+                <div>{{num}}</div>
+                <input type="text" v-model="msg" />
+                <p>{{msg1}}</p>
+                <button @click="save">保存</button>
+
+                <div v-if="error" class="error">
+                    {{error}}
+                </div>
+                <div class="user" v-if="user">
+                    <h2>{{user}}</h2>
+                </div>
+            </div>
+            `,
+            methods: {
+                setData(user){
+                    this.user = user;
+                },
+                setError(err){
+                    this.err = err;
+                },
+                save(){
+                    this.msg1 = this.msg
+                    this.msg = ""
+                    this.confirm_ = true;
+                }
+            },
+            created(){
+                this.timer = setInterval(()=>{
+                    console.log(this.num)
+                    this.num += 1;
+                },1000)
+            },
+            //未创建前，用axios.get()
+            //创建后用 this.$axios.get()
+            beforeRouteEnter (to, from, next) {
+                //路由加载前
+                // 在渲染该组件的对应路由被 confirm 前调用
+                // 不！能！获取组件实例 `this`
+                // 因为当守卫执行前，组件实例还没被创建
+                console.log("beforeRouteEnter,to",to);
+                console.log("beforeRouteEnter,from",from);
+                console.log("beforeRouteEnter,next",next);
+                axios.get(`http://127.0.0.1:8888/user/${to.params.id}`)
+                .then(res=>{
+                    next(vm=>vm.setData(res.data));
+                    console.log("res",res)
+                    console.log("next",next)
+                })
+                .catch(err=>{
+                  next(vm=>vm.setError(err))  
+                })
+            },
+            //切换路由后，调用这个钩子函数
+            beforeRouteUpdate (to, from, next) {
+                //路由切换时
+                // 在当前路由改变，但是该组件被复用时调用
+                // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+                // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+                // 可以访问组件实例 `this`
+                this.$axios.get(`http://127.0.0.1:8888/user/${to.params.id}`)
+                .then(res=>{
+                    this.setData(res.data);
+                    next();
+                })
+                .catch(err=>{
+                    this.setError(err)
+                    next();
+                })
+            },
+            //用来清理定时器
+            //用来提示离开页面保存数据
+            beforeRouteLeave (to, from, next) {
+                //路由离开时
+                // 导航离开该组件的对应路由时调用
+                // 可以访问组件实例 `this`
+                console.log("离开了")
+                clearInterval(this.timer)
+                // next()
+                if(this.confirm_ == true && this.msg){
+                    // confirm为true，证明用户已经输入了内容,提示用户保存信息
+                    //点击确定，confirm_=true已保存,离开；点击取消，confirm_=false不保存，继续留在当前页面
+                    this.confirm_ = confirm("提示1:请保存信息");//用户点击取消按钮，返回值为false
+                    next(false);
+                }else if(this.confirm_ == false){
+                    alert("提示2:请保存信息后退出");
+                    next(false);
+                }else{
+                    next();//放行路由
+                }
+            }
+        }
+
+        //测试组件
+        var Test = {
+            template:`
+            <div>我是测试组件</div>
+            `
+        }
+
+        Vue.use(VueRouter)
+        //路由组件
+        var Router = new VueRouter({
+            routes:[
+                {
+                    path:"/test",
+                    name:"test",
+                    component:Test
+                },
+                {
+                    path:"/user/:id",
+                    name:"user",
+                    component:User
+                }
+            ]
+        })
+        //入口组件
+        var App ={
+            template:`
+            <div>
+            <router-link :to="{name:'test'}">测试</router-link>
+            <router-link :to="{name:'user',params:{id:1}}">用户1</router-link>
+            <router-link :to="{name:'user',params:{id:2}}">用户2</router-link>
+            <router-view />
+            </div> 
+            `
+        };
+        //
+        new Vue({
+            el:"#app",
+            data(){
+                return {
+
+                }
+            },
+            components:{
+                App
+            },
+            template:`
+            <App />
+            `,
+            router:Router
+        })
+    </script>
+    
+</body>
+</html>

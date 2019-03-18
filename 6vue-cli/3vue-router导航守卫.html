@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue.js"></script>
+    <script src="vue-router.js"></script>
+    <script src="axios.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        //需求，导航完成后获取数据，在获取数据期间展示一个loading状态，可以在不同试图间展示不同loading状态
+        //$axios挂载到原型
+        Vue.prototype.$axios = axios;
+        //首页组件
+        var Index = {
+            template:`
+                <div>我是首页</div>
+            `
+        }
+
+        //我的博客组件
+        var Post = {
+            data(){
+                return {
+                    loading:false,
+                    error:null,
+                    post:null
+                }
+            },
+            template:`
+            <div>
+                <div class="loading" v-if="loading">
+                loading...
+                </div>
+                <div class="error" v-if="error">
+                    {{error}}
+                </div>
+                <div class="content" v-if="post">
+                    <h3>{{post.title}}</h3>
+                    <p>{{post.body}}</p>
+                </div>
+            </div>
+            `,
+            created(){
+                //组件创建完成后获取数据
+                //此时data已经被监听
+                this.fetchData()
+            },
+            watch:{
+                //监听路由信息对象，路由发生改变就执行fetchData,请求
+                "$route":"fetchData"
+            },
+            methods:{
+                fetchData(){
+                    this.error = null;
+                    this.post = null;
+                    this.loading = true;
+                    this.$axios.get("http://127.0.0.1:8888/post")
+                    .then(res=>{
+                        this.loading = false;
+                        this.post = res.data;
+                    })
+                    .catch(err=>{
+                        this.error = err.toString();
+                    })
+
+                }
+            }
+        };
+
+        //路由
+        var Router = new VueRouter({
+            routes:[
+                {
+                    path:"/index",
+                    name:"index",
+                    component:Index
+                },
+                {
+                    path:"/post",
+                    name:"post",
+                    component:Post
+                }
+            ]
+        });
+
+        var App = {
+            template:`
+            <div>
+                <router-link :to="{name:'index'}">首页</router-link>
+                <router-link :to="{name:'post'}">我的博客</router-link>
+                <router-view />
+            </div>
+            `
+        };
+
+        new Vue({
+            el:"#app",
+            template:`
+            <App />`,
+            components:{
+                App
+            },
+            router:Router
+        })
+    </script>
+
+</body>
+</html>
