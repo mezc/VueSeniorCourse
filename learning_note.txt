@@ -86,9 +86,31 @@ new Vue({
 var Event = new Vue();
 
 5.vue-cli,需要安装全局
-cnpm i vue-cli -G
+cnpm i -g vue-cli
+
 //拉取vue-cli 2,全局安装桥接工具
 cnpm i -g @vue/cli-init
 //vue-cli@2:
+
 //vue init 模版名 项目名
 //vue init webpack my-project
+
+
+//vue-cli 支持的模块有：
+webpack,webpack-simple,browserify,browserify-simple,pwa,simple
+
+6.vue-cli相关文件介绍：
+//build文件夹：里面对webpack开发和打包的相关配置，包括入口文件，输出文件，使用的模块
+//config文件夹：指定开发和打包的静态资源，要压缩的文件类型，开发使用的端口号，开发使用虚拟服务器跨域请求api
+//.editorconfig:代码规范文件，规定使用空格/tab缩进，缩进长度是两位四位的代码风格
+//src
+//main.js:整个项目的入口文件
+//App.vue:入口组件
+//router:路由模块
+//components:公有组件
+//assets:放置每个组件的静态资源|（static放置的是公有静态资源）
+
+//router/index.js:
+//此时的router是局部对象，必须使用Vue.use(Router),就可以在任意的组件中使用this.$router,this.$route
+
+
