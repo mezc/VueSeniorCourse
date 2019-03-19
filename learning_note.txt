@@ -113,4 +113,10 @@ webpack,webpack-simple,browserify,browserify-simple,pwa,simple
 //router/index.js:
 //此时的router是局部对象，必须使用Vue.use(Router),就可以在任意的组件中使用this.$router,this.$route
 
+//设置顺序
+//1新建是有组件文件夹
+//1.1创建只有组件
+//2router/index.js下配置路由
+//3App.vue入口组件中配置
+
 
