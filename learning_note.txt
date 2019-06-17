@@ -101,8 +101,11 @@ webpack,webpack-simple,browserify,browserify-simple,pwa,simple
 
 6.vue-cli相关文件介绍：
 //build文件夹：里面对webpack开发和打包的相关配置，包括入口文件，输出文件，使用的模块
+
 //config文件夹：指定开发和打包的静态资源，要压缩的文件类型，开发使用的端口号，开发使用虚拟服务器跨域请求api
+
 //.editorconfig:代码规范文件，规定使用空格/tab缩进，缩进长度是两位四位的代码风格
+
 //src
 //main.js:整个项目的入口文件
 //App.vue:入口组件
@@ -118,5 +121,19 @@ webpack,webpack-simple,browserify,browserify-simple,pwa,simple
 //1.1创建只有组件
 //2router/index.js下配置路由
 //3App.vue入口组件中配置
+
+//config/index.js:整个文件的配置入口
+
+//build/webpack.base.conf.js
+//处理后缀名：
+//resolve:{
+    extensions:[
+        ".js",".vue",".json"//以这几个后缀名可以省略不写
+    ],
+    alias:{//以一个别名代表一个路径
+        "vue$":"vue/dist/vue.esm.js",
+        "@":resolve("src")
+    }
+}
 
 
